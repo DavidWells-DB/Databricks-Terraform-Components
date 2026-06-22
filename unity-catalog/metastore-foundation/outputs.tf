@@ -13,8 +13,8 @@ output "storage_credential_id" {
 }
 
 output "assignment_ids" {
-  description = "Map of workspace labels to their metastore assignment IDs."
-  value       = module.metastore_assignment.assignment_ids
+  description = "Map of workspace labels to their metastore assignment IDs. Empty when no workspace_ids were provided."
+  value       = try(module.metastore_assignment[0].assignment_ids, {})
 }
 
 output "aws_iam_role_arn" {

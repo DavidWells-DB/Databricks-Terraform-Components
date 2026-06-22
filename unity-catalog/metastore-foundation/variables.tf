@@ -23,13 +23,15 @@ variable "region" {
 }
 
 variable "storage_root_url" {
-  description = "Root storage URL for the metastore (e.g., s3://bucket/path, abfss://container@account.dfs.core.windows.net, gs://bucket/path)."
+  description = "Optional root storage URL for the metastore (e.g., s3://bucket/path, abfss://container@account.dfs.core.windows.net, gs://bucket/path). Leave empty for a storageless metastore (recommended; manage storage at the catalog level via the domain-catalog component). When set, the matching cloud storage-credential inputs below are required."
   type        = string
+  default     = ""
 }
 
 variable "data_access_name" {
-  description = "Name for the data access configuration in the metastore."
+  description = "Name for the data access configuration in the metastore. Required only when storage_root_url is set."
   type        = string
+  default     = ""
 }
 
 variable "workspace_ids" {

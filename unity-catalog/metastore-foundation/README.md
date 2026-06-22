@@ -4,9 +4,11 @@ Creates the Unity Catalog metastore foundation for a region. This component is i
 
 ## What It Creates
 
-1. **Storage Credential** - Cloud-specific credential for metastore root storage (AWS IAM Role, Azure Access Connector, or GCP Service Account)
-2. **Unity Catalog Metastore** - The metastore itself, bound to the storage credential
-3. **Workspace Assignments** - Assigns the metastore to one or more Databricks workspaces
+1. **Unity Catalog Metastore** - The metastore itself (always created).
+2. **Storage Credential + data access** - Cloud-specific credential for the metastore root (AWS IAM Role, Azure Access Connector, or GCP Service Account). Created **only when `storage_root_url` is set**. Leave it empty for a **storageless metastore** (recommended — manage storage at the catalog level via the `domain-catalog` component).
+3. **Workspace Assignments** - Created **only when `workspace_ids` is non-empty**. A metastore can be created independently and assigned to workspaces later.
+
+> **Storageless is the recommended default.** A metastore-level storage root is discouraged by current Databricks guidance; prefer catalog-level managed storage. A storageless metastore is also purely account-plane (no workspace-plane storage credential), so it needs only the `databricks.account` provider.
 
 ## Modules Composed
 
@@ -29,9 +31,9 @@ This component works across all three clouds. Set the `cloud` variable to select
 | `cloud` | Cloud provider: `aws`, `azure`, or `gcp` | Yes |
 | `metastore_name` | Name of the metastore | Yes |
 | `region` | Cloud region for the metastore | Yes |
-| `storage_root_url` | Root storage URL | Yes |
-| `data_access_name` | Name for the data access configuration | Yes |
-| `workspace_ids` | Map of label => workspace_id for assignment | No |
+| `storage_root_url` | Root storage URL. Empty (default) = storageless metastore | No |
+| `data_access_name` | Name for the data access configuration. Required only when `storage_root_url` is set | Conditional |
+| `workspace_ids` | Map of label => workspace_id for assignment (empty = no assignment) | No |
 | `aws_*` | AWS-specific variables (when `cloud = "aws"`) | Conditional |
 | `azure_*` | Azure-specific variables (when `cloud = "azure"`) | Conditional |
 | `gcp_*` | GCP-specific variables (when `cloud = "gcp"`) | Conditional |
@@ -48,6 +50,27 @@ This component works across all three clouds. Set the `cloud` variable to select
 | `gcp_service_account_email` | (GCP) Service account email |
 
 ## Usage Examples
+
+### Storageless (recommended)
+
+Account-plane only — no storage credential, no workspace required. Manage storage at the catalog level via `domain-catalog`.
+
+```hcl
+module "metastore_foundation" {
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Components//unity-catalog/metastore-foundation?ref=v1.0.0"
+
+  providers = {
+    databricks.account   = databricks.account
+    databricks.workspace = databricks.workspace # declared but unused when storageless + unassigned
+  }
+
+  cloud          = "aws" # or azure / gcp
+  metastore_name = "us-east-1-metastore"
+  region         = "us-east-1"
+  # storage_root_url omitted -> storageless
+  # workspace_ids omitted    -> no assignment
+}
+```
 
 ### AWS
 
