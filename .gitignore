@@ -1,0 +1,33 @@
+# Secrets & credentials — NEVER commit
+.env
+.env-*
+*.tfvars
+!example.tfvars
+gcp-cert.json
+*-cert.json
+*.pem
+*_key.json
+credentials.json
+
+# Terraform state & caches
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Test scaffolding (created/destroyed during component testing)
+_test_provider.tf
+_test.auto.tfvars
+
+# Local tooling
+.claude/settings.local.json
+
+# OS / editor
+.DS_Store
+*.swp
