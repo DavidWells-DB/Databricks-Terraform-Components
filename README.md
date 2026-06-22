@@ -100,3 +100,13 @@ See each component's `README.md` for its specific inputs, outputs, and the modul
 Components are validated by real `terraform apply`/`destroy` against live cloud environments. Cloud-native infrastructure (VPCs, subnets, firewalls, private endpoints, NAT, peering) is exercised end-to-end on AWS, Azure, and GCP.
 
 > **Note (GCP):** the Databricks account-registration resources on GCP (`databricks_mws_networks`, PSC-endpoint registration) require a Google-identity-federated account admin to provision and are validated separately from the cloud-native infrastructure.
+
+Each component ships an `example.tfvars` — copy it to `terraform.tfvars` (gitignored) and fill in your values.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for component structure, conventions, and the testing workflow.
+
+## License
+
+See [LICENSE](LICENSE). Copyright Databricks, Inc.
