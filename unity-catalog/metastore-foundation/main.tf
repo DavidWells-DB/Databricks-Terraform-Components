@@ -2,9 +2,13 @@
 # Metastore Foundation Component
 # -----------------------------------------------------------------------------
 # This component creates the Unity Catalog metastore foundation:
-# 1. Cloud-specific storage credential (AWS, Azure, or GCP)
-# 2. Unity Catalog metastore
-# 3. Metastore-to-workspace assignments
+# 1. Unity Catalog metastore (always)
+# 2. Cloud-specific storage credential + data access (only when storage_root_url is set)
+# 3. Metastore-to-workspace assignments (only when workspace_ids is non-empty)
+#
+# With no storage_root_url and no workspace_ids, this creates a storageless
+# metastore at the account plane only (recommended; manage storage at the
+# catalog level via the domain-catalog component).
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------
@@ -12,7 +16,7 @@
 # -----------------------------------------------------------------------------
 
 module "aws_storage_credential" {
-  count  = var.cloud == "aws" ? 1 : 0
+  count  = (local.create_storage && var.cloud == "aws") ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-uc-storage-credential?ref=main"
 
   providers = {
@@ -28,22 +32,22 @@ module "aws_storage_credential" {
 }
 
 module "azure_storage_credential" {
-  count  = var.cloud == "azure" ? 1 : 0
+  count  = (local.create_storage && var.cloud == "azure") ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-uc-storage-credential?ref=main"
 
   providers = {
     databricks.workspace = databricks.workspace
   }
 
-  resource_group_name  = var.azure_resource_group_name
-  location             = var.azure_location
-  storage_account_id   = var.azure_storage_account_id
-  credential_name      = var.azure_credential_name
+  resource_group_name   = var.azure_resource_group_name
+  location              = var.azure_location
+  storage_account_id    = var.azure_storage_account_id
+  credential_name       = var.azure_credential_name
   access_connector_name = var.azure_access_connector_name
 }
 
 module "gcp_storage_credential" {
-  count  = var.cloud == "gcp" ? 1 : 0
+  count  = (local.create_storage && var.cloud == "gcp") ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-uc-storage-credential?ref=main"
 
   providers = {
@@ -59,31 +63,35 @@ module "gcp_storage_credential" {
 # -----------------------------------------------------------------------------
 
 locals {
-  storage_credential_id = coalesce(
+  # When storage_root_url is empty, create a storageless metastore: skip the
+  # cloud storage-credential modules and pass no credential to the metastore.
+  create_storage = var.storage_root_url != ""
+
+  storage_credential_id = local.create_storage ? coalesce(
     var.cloud == "aws" ? try(module.aws_storage_credential[0].storage_credential_id, "") : "",
     var.cloud == "azure" ? try(module.azure_storage_credential[0].storage_credential_id, "") : "",
     var.cloud == "gcp" ? try(module.gcp_storage_credential[0].storage_credential_id, "") : "",
-  )
+  ) : null
 
-  storage_credential = (
+  storage_credential = local.create_storage ? (
     var.cloud == "aws" ? {
       aws_iam_role = {
         role_arn = try(module.aws_storage_credential[0].iam_role_arn, "")
       }
       azure_managed_identity         = null
       databricks_gcp_service_account = null
-    } : var.cloud == "azure" ? {
+      } : var.cloud == "azure" ? {
       aws_iam_role = null
       azure_managed_identity = {
         access_connector_id = try(module.azure_storage_credential[0].access_connector_id, "")
       }
       databricks_gcp_service_account = null
-    } : {
-      aws_iam_role           = null
-      azure_managed_identity = null
+      } : {
+      aws_iam_role                   = null
+      azure_managed_identity         = null
       databricks_gcp_service_account = {}
     }
-  )
+  ) : null
 }
 
 # -----------------------------------------------------------------------------
@@ -99,8 +107,8 @@ module "metastore" {
 
   metastore_name     = var.metastore_name
   region             = var.region
-  storage_root_url   = var.storage_root_url
-  data_access_name   = var.data_access_name
+  storage_root_url   = local.create_storage ? var.storage_root_url : null
+  data_access_name   = local.create_storage ? var.data_access_name : null
   storage_credential = local.storage_credential
 }
 
@@ -109,6 +117,9 @@ module "metastore" {
 # -----------------------------------------------------------------------------
 
 module "metastore_assignment" {
+  # Only assign when workspace_ids are provided; a metastore can be created
+  # independently and assigned to workspaces later.
+  count  = length(var.workspace_ids) > 0 ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-metastore-assignment?ref=main"
 
   providers = {
