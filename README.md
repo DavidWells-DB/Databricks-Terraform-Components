@@ -44,7 +44,7 @@ module "vpc" {
 |-----------|-------------|
 | [`managed-security`](networking/azure/managed-security) | VNet injection with Secure Cluster Connectivity (No Public IP) — the simplest tier. |
 | [`hub-spoke-firewall`](networking/azure/hub-spoke-firewall) | Hub-spoke with Azure Firewall egress filtering, public front-end (no Private Link). |
-| [`ncc-storage`](networking/azure/ncc-storage) | NCC for serverless compute + VNet injection for classic compute in one deployment. |
+| [`ncc-storage`](networking/azure/ncc-storage) | NCC for serverless compute + VNet injection for classic compute. Each half is independently toggleable (`enable_ncc` / `enable_vnet`) for serverless-only or classic-only deployments. |
 | [`hardened-connectivity`](networking/azure/hardened-connectivity) | VNet injection with back-end Private Link; front-end stays public. |
 | [`isolated`](networking/azure/isolated) | Full Private Link (front-end, back-end, browser auth) + Azure Firewall in a hub-spoke topology — most restrictive tier. |
 
@@ -60,8 +60,8 @@ module "vpc" {
 
 | Component | Description |
 |-----------|-------------|
-| [`metastore-foundation`](unity-catalog/metastore-foundation) | Regional Unity Catalog metastore foundation — run **once per region** by a platform team. |
-| [`domain-catalog`](unity-catalog/domain-catalog) | Domain/environment-specific catalog within an existing metastore — run **once per team/env/domain**. |
+| [`metastore-foundation`](unity-catalog/metastore-foundation) | Regional Unity Catalog metastore foundation — run **once per region** by a platform team. Defaults to a **storageless** metastore (recommended); attach a storage root and workspace assignments only if needed. |
+| [`domain-catalog`](unity-catalog/domain-catalog) | Domain/environment-specific catalog within an existing metastore — run **once per team/env/domain**. Storage credential is created only when the catalog uses external storage. |
 
 ## Usage
 
