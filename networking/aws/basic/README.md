@@ -21,7 +21,7 @@ Provisions a standard Databricks-ready VPC with internet egress via NAT Gateway 
 | `availability_zones` | AZs to use | no |
 | `private_subnet_cidrs` | Private subnet CIDRs | no |
 | `public_subnet_cidrs` | Public subnet CIDRs | no |
-| `databricks_gov_shard` | GovCloud shard (`null`, `"civilian"`, or `"dod"`) | no |
+| `databricks_gov_shard` | GovCloud shard: `null`, `"civilian"`, or `"dod"` — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
 | `tags` | Resource tags | no |
 
 ## Key Outputs

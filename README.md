@@ -95,6 +95,12 @@ See each component's `README.md` for its specific inputs, outputs, and the modul
 - The relevant cloud provider: `aws`, `azurerm` (`>= 3.70`), or `google` (`>= 5.0`)
 - Appropriate account-level credentials for the target cloud
 
+## AWS GovCloud
+
+The AWS networking and Unity Catalog components support **AWS GovCloud** (Civilian / FedRAMP High and DoD / IL5) via the `databricks_gov_shard` and `aws_partition` variables, which switch the Databricks account host and the Databricks-managed IAM identities used in trust policies. GovCloud is AWS-only.
+
+See **[docs/GOVCLOUD.md](docs/GOVCLOUD.md)** for the shard reference table, per-component support, the identity values each shard uses, and a worked example.
+
 ## Testing status
 
 Components are validated by real `terraform apply`/`destroy` against live cloud environments. Cloud-native infrastructure (VPCs, subnets, firewalls, private endpoints, NAT, peering) is exercised end-to-end on AWS, Azure, and GCP.

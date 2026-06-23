@@ -20,8 +20,8 @@ Enables Databricks serverless compute (SQL Warehouses, Model Serving, Notebooks,
 | `subnet_ids` | Subnet IDs for NLB targets | yes |
 | `target_ip` | IP of the target service | yes |
 | `target_port` | Port of the target service | yes |
-| `aws_partition` | AWS partition (default: `aws`) | no |
-| `databricks_gov_shard` | GovCloud shard | no |
+| `aws_partition` | AWS partition: `aws` or `aws-us-gov` (default: `aws`) — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
+| `databricks_gov_shard` | GovCloud shard (`null`/`"civilian"`/`"dod"`) — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
 | `tags` | Resource tags | no |
 
 ## Key Outputs

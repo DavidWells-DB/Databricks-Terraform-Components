@@ -50,7 +50,7 @@ Implements a hub-spoke network architecture using AWS Transit Gateway with Netwo
 | `enable_privatelink` | Enable PrivateLink endpoints (default: `true`) | no |
 | `tgw_asn` | Transit Gateway BGP ASN (default: `64512`) | no |
 | `firewall_allow_domains` | Domains to allow through firewall | no |
-| `databricks_gov_shard` | GovCloud shard | no |
+| `databricks_gov_shard` | GovCloud shard (`null`/`"civilian"`/`"dod"`) — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
 | `tags` | Resource tags | no |
 
 ## Key Outputs
