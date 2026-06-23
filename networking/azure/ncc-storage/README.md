@@ -2,23 +2,27 @@
 
 Network Connectivity Config for serverless compute combined with VNet injection for classic compute. This component sets up networking for both compute types in a single deployment, providing a unified networking foundation for workspaces that use both classic and serverless SQL warehouses or jobs.
 
+Both halves are independently toggleable via `enable_ncc` and `enable_vnet` (both default `true`): set `enable_vnet = false` for a serverless-only deployment, or `enable_ncc = false` for a classic-only deployment.
+
 ## Modules Composed
 
-| Module | Purpose |
-|--------|---------|
-| `azure-account-network-connectivity-config` | Network Connectivity Config for serverless compute |
-| `azure-account-network-vnet` | VNet, host subnet, container subnet, NSG for classic compute |
+| Module | Purpose | Created when |
+|--------|---------|--------------|
+| `azure-account-network-connectivity-config` | Network Connectivity Config for serverless compute | `enable_ncc` |
+| `azure-account-network-vnet` | VNet, host subnet, container subnet, NSG for classic compute | `enable_vnet` |
 
 ## Key Inputs
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `databricks_account_id` | Databricks account ID | — |
-| `ncc_name` | Name of the NCC | — |
-| `ncc_region` | Azure region for the NCC | — |
-| `resource_group_name` | Azure resource group name | — |
-| `location` | Azure region for VNet | — |
-| `vnet_name` | Name of the VNet | — |
+| `enable_ncc` | Create the serverless NCC | `true` |
+| `enable_vnet` | Create the classic-compute VNet | `true` |
+| `databricks_account_id` | Databricks account ID (required when `enable_ncc`) | `""` |
+| `ncc_name` | Name of the NCC (required when `enable_ncc`) | `""` |
+| `ncc_region` | Azure region for the NCC (required when `enable_ncc`) | `""` |
+| `resource_group_name` | Azure resource group name (required when `enable_vnet`) | `""` |
+| `location` | Azure region for VNet (required when `enable_vnet`) | `""` |
+| `vnet_name` | Name of the VNet (required when `enable_vnet`) | `""` |
 | `vnet_cidr` | CIDR for the VNet | `10.0.0.0/16` |
 | `host_subnet_cidr` | Host subnet CIDR | `10.0.1.0/24` |
 | `container_subnet_cidr` | Container subnet CIDR | `10.0.2.0/24` |
@@ -59,6 +63,20 @@ module "ncc_storage" {
   tags = {
     Environment = "production"
   }
+}
+```
+
+### Serverless-only (no classic VNet)
+
+```hcl
+module "ncc_only" {
+  source = "../networking/azure/ncc-storage"
+
+  enable_vnet = false
+
+  databricks_account_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  ncc_name              = "ncc-prod-eastus2"
+  ncc_region            = "eastus2"
 }
 ```
 

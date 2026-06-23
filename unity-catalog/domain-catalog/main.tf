@@ -6,18 +6,26 @@
 # team, environment, or domain.
 #
 # It creates:
-# 1. Cloud-specific storage credential for this domain's data
-# 2. External locations referencing the credential
-# 3. A catalog with optional managed storage
-# 4. Schemas within the catalog
+# 1. A catalog (always) and its schemas
+# 2. Cloud-specific storage credential + external locations — only when the
+#    catalog uses external storage (external_locations non-empty or
+#    catalog_storage_root set). A catalog on metastore-default managed storage
+#    needs no credential.
 # -----------------------------------------------------------------------------
 
+locals {
+  # A storage credential is only needed when the catalog references external
+  # storage — either via external locations or a dedicated catalog storage root.
+  create_credential = length(var.external_locations) > 0 || var.catalog_storage_root != ""
+}
+
 # -----------------------------------------------------------------------------
-# Cloud-Specific Storage Credentials (only one will be active)
+# Cloud-Specific Storage Credentials (only one will be active, and only when
+# the catalog uses external storage)
 # -----------------------------------------------------------------------------
 
 module "aws_storage_credential" {
-  count  = var.cloud == "aws" ? 1 : 0
+  count  = (local.create_credential && var.cloud == "aws") ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-uc-storage-credential?ref=main"
 
   providers = {
@@ -33,7 +41,7 @@ module "aws_storage_credential" {
 }
 
 module "azure_storage_credential" {
-  count  = var.cloud == "azure" ? 1 : 0
+  count  = (local.create_credential && var.cloud == "azure") ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-uc-storage-credential?ref=main"
 
   providers = {
@@ -48,7 +56,7 @@ module "azure_storage_credential" {
 }
 
 module "gcp_storage_credential" {
-  count  = var.cloud == "gcp" ? 1 : 0
+  count  = (local.create_credential && var.cloud == "gcp") ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-uc-storage-credential?ref=main"
 
   providers = {
@@ -64,11 +72,11 @@ module "gcp_storage_credential" {
 # -----------------------------------------------------------------------------
 
 locals {
-  storage_credential_id = coalesce(
+  storage_credential_id = local.create_credential ? coalesce(
     var.cloud == "aws" ? try(module.aws_storage_credential[0].storage_credential_id, "") : "",
     var.cloud == "azure" ? try(module.azure_storage_credential[0].storage_credential_id, "") : "",
     var.cloud == "gcp" ? try(module.gcp_storage_credential[0].storage_credential_id, "") : "",
-  )
+  ) : null
 
   # Build external locations map with storage_credential_id injected
   external_locations_with_credential = {
