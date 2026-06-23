@@ -4,10 +4,11 @@ Creates a domain or environment-specific catalog within an existing Unity Catalo
 
 ## What It Creates
 
-1. **Storage Credential** - Cloud-specific credential for this domain's storage (AWS IAM Role, Azure Access Connector, or GCP Service Account)
-2. **External Locations** - Registered storage paths using the credential
-3. **Catalog** - A Unity Catalog catalog with configurable isolation and grants
-4. **Schemas** - Schemas within the catalog (e.g., bronze, silver, gold)
+1. **Catalog** - A Unity Catalog catalog with configurable isolation and grants (always)
+2. **Schemas** - Schemas within the catalog, e.g. bronze, silver, gold (always)
+3. **Storage Credential + External Locations** - Cloud-specific credential (AWS IAM Role, Azure Access Connector, or GCP Service Account) and registered storage paths. Created **only when the catalog uses external storage** — i.e. `external_locations` is non-empty or `catalog_storage_root` is set. A catalog on metastore-default managed storage needs no credential.
+
+> **Minimal catalog:** with no `external_locations` and no `catalog_storage_root`, this creates just a governed catalog + schemas on the metastore's default managed storage — no storage credential required.
 
 ## Modules Composed
 
@@ -31,7 +32,7 @@ This component works across all three clouds. Set the `cloud` variable to select
 | `cloud` | Cloud provider: `aws`, `azure`, or `gcp` | Yes |
 | `metastore_id` | Metastore ID from metastore-foundation | Yes |
 | `catalog_name` | Name of the catalog to create | Yes |
-| `credential_name` | Name for the storage credential | Yes |
+| `credential_name` | Name for the storage credential. Required only when using external storage | Conditional |
 | `schemas` | Map of schema names to config | No |
 | `external_locations` | Map of location names to config | No |
 | `catalog_comment` | Description for the catalog | No |
@@ -53,6 +54,26 @@ This component works across all three clouds. Set the `cloud` variable to select
 | `gcp_service_account_email` | (GCP) Service account email |
 
 ## Usage Examples
+
+### Minimal (no external storage)
+
+A governed catalog + schemas on the metastore's default managed storage — no credential needed.
+
+```hcl
+module "marketing_catalog" {
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Components//unity-catalog/domain-catalog?ref=v1.0.0"
+
+  cloud        = "aws" # or azure / gcp
+  metastore_id = module.metastore_foundation.metastore_id
+  catalog_name = "marketing"
+
+  # No credential_name, external_locations, or catalog_storage_root needed.
+  schemas = {
+    bronze = { comment = "Raw" }
+    gold   = { comment = "Curated" }
+  }
+}
+```
 
 ### AWS
 

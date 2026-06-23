@@ -1,39 +1,61 @@
 ###############################################################################
-# NCC Variables
+# Feature Toggles
+###############################################################################
+
+variable "enable_ncc" {
+  description = "Create the Network Connectivity Config for serverless compute. Disable for a classic-only deployment."
+  type        = bool
+  default     = true
+}
+
+variable "enable_vnet" {
+  description = "Create the VNet (with subnets/NSG) for classic compute. Disable for a serverless-only deployment."
+  type        = bool
+  default     = true
+}
+
+###############################################################################
+# NCC Variables (required when enable_ncc = true)
 ###############################################################################
 
 variable "databricks_account_id" {
-  description = "Databricks account ID"
+  description = "Databricks account ID. Required when enable_ncc = true."
   type        = string
+  default     = ""
 }
 
 variable "ncc_name" {
-  description = "Name of the Network Connectivity Config"
+  description = "Name of the Network Connectivity Config. Required when enable_ncc = true."
   type        = string
+  default     = ""
 }
 
 variable "ncc_region" {
-  description = "Azure region for the Network Connectivity Config"
+  description = "Azure region for the Network Connectivity Config. Required when enable_ncc = true."
   type        = string
+  default     = ""
 }
 
 ###############################################################################
-# VNet Variables (Classic Compute)
+# VNet Variables (Classic Compute; required when enable_vnet = true)
 ###############################################################################
 
 variable "resource_group_name" {
-  description = "Name of the Azure resource group"
+  description = "Name of the Azure resource group. Required when enable_vnet = true."
   type        = string
+  default     = ""
 }
 
 variable "location" {
-  description = "Azure region for VNet resources"
+  description = "Azure region for VNet resources. Required when enable_vnet = true."
   type        = string
+  default     = ""
 }
 
 variable "vnet_name" {
-  description = "Name of the Virtual Network for classic compute"
+  description = "Name of the Virtual Network for classic compute. Required when enable_vnet = true."
   type        = string
+  default     = ""
 }
 
 variable "vnet_cidr" {

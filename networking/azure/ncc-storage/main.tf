@@ -1,6 +1,10 @@
 ###############################################################################
 # NCC + Storage Component
 # Network Connectivity Config (serverless) + VNet (classic compute)
+#
+# Both halves are independently toggleable: a serverless-only deployment can
+# disable the VNet (enable_vnet = false), and a classic-only deployment can
+# disable the NCC (enable_ncc = false). Both default to enabled.
 ###############################################################################
 
 ###############################################################################
@@ -8,6 +12,7 @@
 ###############################################################################
 
 module "ncc" {
+  count  = var.enable_ncc ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-connectivity-config?ref=main"
 
   providers = {
@@ -24,6 +29,7 @@ module "ncc" {
 ###############################################################################
 
 module "vnet" {
+  count  = var.enable_vnet ? 1 : 0
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=main"
 
   resource_group_name   = var.resource_group_name

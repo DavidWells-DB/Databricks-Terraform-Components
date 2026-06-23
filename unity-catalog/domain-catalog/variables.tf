@@ -108,8 +108,9 @@ variable "external_locations" {
 # -----------------------------------------------------------------------------
 
 variable "credential_name" {
-  description = "Name for the storage credential used by this domain catalog."
+  description = "Name for the storage credential used by this domain catalog. Required only when the catalog uses external storage (external_locations is non-empty or catalog_storage_root is set); leave empty for a catalog on metastore-default managed storage."
   type        = string
+  default     = ""
 }
 
 # -----------------------------------------------------------------------------

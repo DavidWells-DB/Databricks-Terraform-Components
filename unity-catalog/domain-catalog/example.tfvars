@@ -1,10 +1,14 @@
 # Unity Catalog Domain Catalog — example variables
 # Copy to terraform.tfvars (gitignored) and fill in. Run once per team/env/domain.
 
-cloud           = "aws" # aws | azure | gcp
-metastore_id    = "00000000-0000-0000-0000-000000000000" # from metastore-foundation
-catalog_name    = "marketing"
-credential_name = "marketing-catalog-credential"
+cloud        = "aws"                                  # aws | azure | gcp
+metastore_id = "00000000-0000-0000-0000-000000000000" # from metastore-foundation
+catalog_name = "marketing"
+
+# credential_name is only needed when the catalog uses external storage
+# (external_locations below, or catalog_storage_root). For a catalog on
+# metastore-default managed storage, leave it unset.
+# credential_name = "marketing-catalog-credential"
 
 # Optional catalog config
 # catalog_comment        = "Marketing domain catalog"
@@ -33,10 +37,10 @@ schemas = {
 #   }
 # }
 
-# --- AWS (when cloud = "aws") ---
-aws_role_name   = "marketing-catalog-role"
-aws_bucket_name = "my-marketing-bucket"
-aws_account_id  = "123456789012"
+# --- AWS (only when cloud = "aws" AND using external storage) ---
+# aws_role_name   = "marketing-catalog-role"
+# aws_bucket_name = "my-marketing-bucket"
+# aws_account_id  = "123456789012"
 # aws_partition       = "aws"
 # databricks_gov_shard = false
 
