@@ -23,7 +23,7 @@ Provisions a Databricks-ready VPC with AWS Network Firewall for egress filtering
 | `firewall_stateful_rule_group_arns` | Stateful rule group ARNs | no |
 | `firewall_stateless_rule_group_arns` | Stateless rule group ARNs | no |
 | `firewall_allow_domains` | Domains to allow through firewall | no |
-| `databricks_gov_shard` | GovCloud shard | no |
+| `databricks_gov_shard` | GovCloud shard (`null`/`"civilian"`/`"dod"`) — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
 | `tags` | Resource tags | no |
 
 ## Key Outputs

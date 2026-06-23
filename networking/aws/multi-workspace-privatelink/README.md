@@ -23,7 +23,7 @@ Provisions a shared VPC with backend PrivateLink connectivity (REST API + Secure
 | `public_subnet_cidrs` | Public subnet CIDRs | no |
 | `privatelink_subnet_cidrs` | PrivateLink subnet CIDRs | no |
 | `security_group_ingress_cidr_blocks` | CIDRs allowed to access PrivateLink endpoints | no |
-| `databricks_gov_shard` | GovCloud shard | no |
+| `databricks_gov_shard` | GovCloud shard (`null`/`"civilian"`/`"dod"`) — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
 | `tags` | Resource tags | no |
 
 ## Key Outputs

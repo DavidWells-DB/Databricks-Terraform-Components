@@ -25,6 +25,8 @@ Creates a domain or environment-specific catalog within an existing Unity Catalo
 
 This component works across all three clouds. Set the `cloud` variable to select which storage credential module to activate. Only the provider for the selected cloud needs to be configured, though all three are declared in `versions.tf`.
 
+For **AWS GovCloud**, set `databricks_gov_shard` (`"civilian"` / `"dod"`) and `aws_partition = "aws-us-gov"`. See [GovCloud support](../../docs/GOVCLOUD.md).
+
 ## Key Inputs
 
 | Variable | Description | Required |
