@@ -26,7 +26,7 @@ locals {
 
 module "aws_storage_credential" {
   count  = (local.create_credential && var.cloud == "aws") ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-uc-storage-credential?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-uc-storage-credential?ref=aws-uc-storage-credential/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -42,7 +42,7 @@ module "aws_storage_credential" {
 
 module "azure_storage_credential" {
   count  = (local.create_credential && var.cloud == "azure") ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-uc-storage-credential?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-uc-storage-credential?ref=azure-uc-storage-credential/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -57,7 +57,7 @@ module "azure_storage_credential" {
 
 module "gcp_storage_credential" {
   count  = (local.create_credential && var.cloud == "gcp") ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-uc-storage-credential?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-uc-storage-credential?ref=gcp-uc-storage-credential/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -96,7 +96,7 @@ locals {
 # -----------------------------------------------------------------------------
 
 module "external_locations" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-external-location?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-external-location?ref=dbx-uc-external-location/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -110,7 +110,7 @@ module "external_locations" {
 # -----------------------------------------------------------------------------
 
 module "catalog" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-catalog?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-catalog?ref=dbx-uc-catalog/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -133,7 +133,7 @@ module "catalog" {
 # -----------------------------------------------------------------------------
 
 module "schemas" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-schema?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-schema?ref=dbx-uc-schema/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace

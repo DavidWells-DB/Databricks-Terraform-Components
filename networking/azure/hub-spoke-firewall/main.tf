@@ -35,7 +35,7 @@ resource "azurerm_subnet" "hub_gateway" {
 ###############################################################################
 
 module "spoke_vnet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=azure-account-network-vnet/v0.1.0"
 
   resource_group_name   = var.resource_group_name
   location              = var.location
@@ -54,7 +54,7 @@ module "spoke_vnet" {
 ###############################################################################
 
 module "vnet_peering" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet-peering?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet-peering?ref=azure-account-network-vnet-peering/v0.1.0"
 
   local_vnet_name            = var.hub_vnet_name
   remote_vnet_name           = var.spoke_vnet_name
@@ -70,7 +70,7 @@ module "vnet_peering" {
 ###############################################################################
 
 module "firewall" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-firewall?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-firewall?ref=azure-account-network-firewall/v0.1.0"
 
   resource_group_name       = var.resource_group_name
   location                  = var.location

@@ -4,7 +4,7 @@
 ###############################################################################
 
 module "vnet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=azure-account-network-vnet/v0.1.0"
 
   resource_group_name   = var.resource_group_name
   location              = var.location
@@ -21,7 +21,7 @@ module "vnet" {
 }
 
 module "private_endpoints" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-private-endpoints?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-private-endpoints?ref=azure-account-network-private-endpoints/v0.1.0"
 
   resource_group_name    = var.resource_group_name
   location               = var.location

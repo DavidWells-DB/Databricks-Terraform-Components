@@ -8,7 +8,7 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=gcp-account-network-vpc/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -25,7 +25,7 @@ module "vpc" {
 }
 
 module "cloud_nat" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-cloud-nat?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-cloud-nat?ref=gcp-account-network-cloud-nat/v0.1.0"
 
   project_id         = var.project_id
   region             = var.region
