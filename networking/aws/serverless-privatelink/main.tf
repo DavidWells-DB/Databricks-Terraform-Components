@@ -12,7 +12,7 @@ locals {
 }
 
 module "ncc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-connectivity-config?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-connectivity-config?ref=aws-account-network-connectivity-config/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -23,7 +23,7 @@ module "ncc" {
 }
 
 module "serverless_privatelink" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-serverless-privatelink?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-serverless-privatelink?ref=aws-account-network-serverless-privatelink/v0.1.0"
 
   name                  = local.serverless_privatelink_name
   vpc_id                = var.vpc_id

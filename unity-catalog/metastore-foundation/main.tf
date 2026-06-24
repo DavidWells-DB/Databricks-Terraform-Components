@@ -17,7 +17,7 @@
 
 module "aws_storage_credential" {
   count  = (local.create_storage && var.cloud == "aws") ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-uc-storage-credential?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-uc-storage-credential?ref=aws-uc-storage-credential/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -33,7 +33,7 @@ module "aws_storage_credential" {
 
 module "azure_storage_credential" {
   count  = (local.create_storage && var.cloud == "azure") ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-uc-storage-credential?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-uc-storage-credential?ref=azure-uc-storage-credential/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -48,7 +48,7 @@ module "azure_storage_credential" {
 
 module "gcp_storage_credential" {
   count  = (local.create_storage && var.cloud == "gcp") ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-uc-storage-credential?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-uc-storage-credential?ref=gcp-uc-storage-credential/v0.1.0"
 
   providers = {
     databricks.workspace = databricks.workspace
@@ -99,7 +99,7 @@ locals {
 # -----------------------------------------------------------------------------
 
 module "metastore" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-metastore?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-metastore?ref=dbx-uc-metastore/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -120,7 +120,7 @@ module "metastore_assignment" {
   # Only assign when workspace_ids are provided; a metastore can be created
   # independently and assigned to workspaces later.
   count  = length(var.workspace_ids) > 0 ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-metastore-assignment?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-metastore-assignment?ref=dbx-uc-metastore-assignment/v0.1.0"
 
   providers = {
     databricks.account   = databricks.account

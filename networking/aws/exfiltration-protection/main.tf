@@ -123,7 +123,7 @@ resource "aws_route_table_association" "hub_firewall" {
 # NAT/IGW — routes go to firewall subnets (not hub private)
 # Traffic flow: spoke → TGW → hub private → firewall → NAT → internet
 module "hub_egress_internet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.1.0"
 
   vpc_id                  = aws_vpc.hub.id
   public_subnet_ids       = [for s in aws_subnet.hub_public : s.id]
@@ -132,7 +132,7 @@ module "hub_egress_internet" {
 }
 
 module "hub_firewall" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-firewall?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-firewall?ref=aws-account-network-firewall/v0.1.0"
 
   vpc_id                    = aws_vpc.hub.id
   firewall_name             = local.firewall_name
@@ -148,7 +148,7 @@ module "hub_firewall" {
 ###############################################################################
 
 module "spoke_vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -170,7 +170,7 @@ module "spoke_vpc" {
 }
 
 module "spoke_vpc_endpoints" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc-endpoints?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc-endpoints?ref=aws-account-network-vpc-endpoints/v0.1.0"
 
   vpc_id                  = module.spoke_vpc.vpc_id
   region                  = var.region
@@ -183,7 +183,7 @@ module "spoke_vpc_endpoints" {
 
 module "spoke_privatelink" {
   count  = var.enable_privatelink ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-privatelink-endpoints?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-privatelink-endpoints?ref=aws-account-network-privatelink-endpoints/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -206,7 +206,7 @@ module "spoke_privatelink" {
 ###############################################################################
 
 module "transit_gateway" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-transit-gateway?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-transit-gateway?ref=aws-account-network-transit-gateway/v0.1.0"
 
   resource_prefix = var.resource_prefix
   tgw_asn         = var.tgw_asn

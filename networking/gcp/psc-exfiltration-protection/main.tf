@@ -9,7 +9,7 @@
 ###############################################################################
 
 module "spoke_vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=gcp-account-network-vpc/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -141,7 +141,7 @@ resource "google_compute_firewall" "allow_intra_vpc" {
 ###############################################################################
 
 module "psc_endpoints" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-psc-endpoints?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-psc-endpoints?ref=gcp-account-network-psc-endpoints/v0.1.0"
 
   providers = {
     databricks.account = databricks.account

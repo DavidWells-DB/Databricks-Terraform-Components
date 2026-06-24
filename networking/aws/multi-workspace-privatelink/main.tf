@@ -16,7 +16,7 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -35,7 +35,7 @@ module "vpc" {
 }
 
 module "egress_internet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.1.0"
 
   vpc_id                  = module.vpc.vpc_id
   public_subnet_ids       = values(module.vpc.public_subnet_ids)
@@ -44,7 +44,7 @@ module "egress_internet" {
 }
 
 module "vpc_endpoints" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc-endpoints?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc-endpoints?ref=aws-account-network-vpc-endpoints/v0.1.0"
 
   vpc_id                  = module.vpc.vpc_id
   region                  = var.region
@@ -56,7 +56,7 @@ module "vpc_endpoints" {
 }
 
 module "privatelink_endpoints" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-privatelink-endpoints?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-privatelink-endpoints?ref=aws-account-network-privatelink-endpoints/v0.1.0"
 
   providers = {
     databricks.account = databricks.account

@@ -13,7 +13,7 @@
 
 module "ncc" {
   count  = var.enable_ncc ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-connectivity-config?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-connectivity-config?ref=azure-account-network-connectivity-config/v0.1.0"
 
   providers = {
     databricks.account = databricks.account
@@ -30,7 +30,7 @@ module "ncc" {
 
 module "vnet" {
   count  = var.enable_vnet ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=azure-account-network-vnet/v0.1.0"
 
   resource_group_name   = var.resource_group_name
   location              = var.location
