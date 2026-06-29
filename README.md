@@ -58,10 +58,12 @@ module "vpc" {
 
 ### Unity Catalog
 
-| Component | Description |
-|-----------|-------------|
-| [`metastore-foundation`](unity-catalog/metastore-foundation) | Regional Unity Catalog metastore foundation — run **once per region** by a platform team. Defaults to a **storageless** metastore (recommended); attach a storage root and workspace assignments only if needed. |
-| [`domain-catalog`](unity-catalog/domain-catalog) | Domain/environment-specific catalog within an existing metastore — run **once per team/env/domain**. Storage credential is created only when the catalog uses external storage. |
+Cloud variation is **structural** — pick the directory for your cloud (`unity-catalog/<cloud>/<component>`), matching the `networking/<cloud>/...` layout. There is no runtime `cloud` toggle.
+
+| Component | Clouds | Description |
+|-----------|--------|-------------|
+| `metastore-foundation` | [aws](unity-catalog/aws/metastore-foundation) · [azure](unity-catalog/azure/metastore-foundation) · [gcp](unity-catalog/gcp/metastore-foundation) | Regional Unity Catalog metastore foundation — run **once per region** by a platform team. Defaults to a **storageless** metastore (recommended); attach a storage root and workspace assignments only if needed. |
+| `domain-catalog` | [aws](unity-catalog/aws/domain-catalog) · [azure](unity-catalog/azure/domain-catalog) · [gcp](unity-catalog/gcp/domain-catalog) | Domain/environment-specific catalog within an existing metastore — run **once per team/env/domain**. Storage credential is created only when the catalog uses external storage. |
 
 ## Usage
 
