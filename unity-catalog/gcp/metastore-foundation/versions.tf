@@ -7,16 +7,6 @@ terraform {
       version               = ">= 1.50"
       configuration_aliases = [databricks.account, databricks.workspace]
     }
-    aws = {
-      source                = "hashicorp/aws"
-      version               = ">= 5.0"
-      configuration_aliases = [aws]
-    }
-    azurerm = {
-      source                = "hashicorp/azurerm"
-      version               = ">= 3.70"
-      configuration_aliases = [azurerm]
-    }
     google = {
       source                = "hashicorp/google"
       version               = ">= 5.0"
