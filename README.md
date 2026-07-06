@@ -111,6 +111,10 @@ Components are validated by real `terraform apply`/`destroy` against live cloud 
 
 Each component ships an `example.tfvars` — copy it to `terraform.tfvars` (gitignored) and fill in your values.
 
+## Knowledge bundle (OKF)
+
+[`knowledge/`](knowledge/) is an [Open Knowledge Format](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundle — an agent-consumable knowledge layer with a concept document per component (plus architecture and sovereign-cloud references), cross-linked and indexed. It summarizes and links to the human READMEs; it does not replace them.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for component structure, conventions, and the testing workflow.
