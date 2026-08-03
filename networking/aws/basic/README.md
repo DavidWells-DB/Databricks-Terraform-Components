@@ -18,9 +18,10 @@ Provisions a standard Databricks-ready VPC with internet egress via NAT Gateway 
 | `region` | AWS region | yes |
 | `resource_prefix` | Prefix for all resource names | yes |
 | `vpc_cidr` | VPC CIDR block (default: `10.0.0.0/16`) | no |
-| `availability_zones` | AZs to use | no |
-| `private_subnet_cidrs` | Private subnet CIDRs | no |
-| `public_subnet_cidrs` | Public subnet CIDRs | no |
+| `az_count` | AZs to span when `availability_zones` is unset (default `2`, min `2`) | no |
+| `availability_zones` | AZs to use; empty = auto-select first `az_count` in region | no |
+| `private_subnet_cidrs` | Private subnet CIDRs; empty = one `/20` per AZ from `vpc_cidr` | no |
+| `public_subnet_cidrs` | Public subnet CIDRs; empty = one `/24` per AZ from `vpc_cidr` | no |
 | `databricks_gov_shard` | GovCloud shard: `null`, `"civilian"`, or `"dod"` — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
 | `tags` | Resource tags | no |
 
@@ -49,3 +50,5 @@ module "basic_network" {
   }
 }
 ```
+
+The three required inputs are sufficient: with `availability_zones`, `private_subnet_cidrs`, and `public_subnet_cidrs` all omitted, the component auto-selects `az_count` AZs and derives one `/20` private + one `/24` public subnet per AZ from `vpc_cidr`. Supply any of them to take manual control.
