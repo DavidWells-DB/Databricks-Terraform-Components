@@ -3,6 +3,28 @@
 # Composes: VPC + Egress Internet (NAT/IGW) + VPC Endpoints (S3/STS/Kinesis)
 ###############################################################################
 
+# Self-deriving network layout so the component plans on required-only inputs.
+# Historically availability_zones / *_subnet_cidrs defaulted to [] while the VPC module
+# requires >= 2 AZs' worth, so callers had to supply all three (the blueprint worked
+# around it locally). The component now derives safe defaults:
+#   - AZs: the first az_count available zones in the region;
+#   - private subnets: one /20 per AZ (cidrsubnet(vpc_cidr, 4, i));
+#   - public subnets:  one /24 per AZ (cidrsubnet(vpc_cidr, 8, 240 + i)),
+#     placed high in the range to avoid colliding with the /20 private blocks.
+# Explicit inputs always win — passing any of the three overrides the derivation.
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+locals {
+  azs = length(var.availability_zones) > 0 ? var.availability_zones : slice(data.aws_availability_zones.available.names, 0, var.az_count)
+  # az_count drives derivation; when AZs are supplied explicitly, follow their count.
+  derived_az_count = length(var.availability_zones) > 0 ? length(var.availability_zones) : var.az_count
+
+  private_subnet_cidrs = length(var.private_subnet_cidrs) > 0 ? var.private_subnet_cidrs : [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 4, i)]
+  public_subnet_cidrs  = length(var.public_subnet_cidrs) > 0 ? var.public_subnet_cidrs : [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 8, 240 + i)]
+}
+
 module "vpc" {
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.1.0"
 
@@ -14,9 +36,9 @@ module "vpc" {
   resource_prefix       = var.resource_prefix
   network_name          = "${var.resource_prefix}-network"
   vpc_cidr              = var.vpc_cidr
-  azs                   = var.availability_zones
-  private_subnet_cidrs  = var.private_subnet_cidrs
-  public_subnet_cidrs   = var.public_subnet_cidrs
+  azs                   = local.azs
+  private_subnet_cidrs  = local.private_subnet_cidrs
+  public_subnet_cidrs   = local.public_subnet_cidrs
   databricks_gov_shard  = var.databricks_gov_shard
   tags                  = var.tags
 }
