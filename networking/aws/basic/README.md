@@ -22,6 +22,8 @@ Provisions a standard Databricks-ready VPC with internet egress via NAT Gateway 
 | `availability_zones` | AZs to use; empty = auto-select first `az_count` in region | no |
 | `private_subnet_cidrs` | Private subnet CIDRs; empty = one `/20` per AZ from `vpc_cidr` | no |
 | `public_subnet_cidrs` | Public subnet CIDRs; empty = one `/24` per AZ from `vpc_cidr` | no |
+| `vpc_endpoint_ids` | Back-end PrivateLink endpoint IDs `{rest_api_id, relay_id}` to register into `mws_networks`; null = no PrivateLink | no |
+| `privatelink_subnet_cidrs` | Dedicated PrivateLink subnet CIDRs; empty = one `/24` per AZ from `vpc_cidr` when `vpc_endpoint_ids` is set | no |
 | `databricks_gov_shard` | GovCloud shard: `null`, `"civilian"`, or `"dod"` — see [GovCloud support](../../../docs/GOVCLOUD.md) | no |
 | `tags` | Resource tags | no |
 
@@ -32,6 +34,7 @@ Provisions a standard Databricks-ready VPC with internet egress via NAT Gateway 
 | `network_id` | Databricks MWS network configuration ID |
 | `vpc_id` | VPC ID |
 | `private_subnet_ids` | Private subnet ID map |
+| `privatelink_subnet_ids` | PrivateLink subnet ID map (empty unless back-end PrivateLink is used) |
 | `security_group_id` | Workspace security group ID |
 
 ## Usage Example
