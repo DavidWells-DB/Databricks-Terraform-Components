@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-03
+
+### Added
+- **Back-end PrivateLink pass-through.** New inputs `vpc_endpoint_ids` (`{rest_api_id, relay_id}`) and `privatelink_subnet_cidrs`, forwarded to the underlying `aws-account-network-vpc` module so PrivateLink VPC endpoints are registered into `databricks_mws_networks` (control-plane + SCC-relay over PrivateLink). New output `privatelink_subnet_ids` for placing the endpoints. When `vpc_endpoint_ids` is set and `privatelink_subnet_cidrs` is empty, one `/24` PrivateLink subnet per AZ is derived from `vpc_cidr` (offset 250, no collision with public/private). This lets a classic workspace config enable back-end PrivateLink as an in-place flag. Verified acyclic: endpoints depend on this Component's VPC; `mws_networks` depends on the endpoints — no dependency cycle.
+
 ## [0.2.0] - 2026-08-02
 
 ### Fixed

@@ -58,3 +58,18 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "privatelink_subnet_cidrs" {
+  description = "CIDR blocks for dedicated PrivateLink subnets (one per AZ). Leave empty (default) to derive one /24 per AZ from vpc_cidr when back-end PrivateLink is used; the aws-account-network-privatelink-endpoints module places its VPC endpoints in these subnets. Empty when PrivateLink is not used."
+  type        = list(string)
+  default     = []
+}
+
+variable "vpc_endpoint_ids" {
+  description = "Optional back-end PrivateLink VPC endpoint IDs (from aws-account-network-privatelink-endpoints), registered into databricks_mws_networks so the workspace routes control-plane + SCC-relay traffic over PrivateLink. null (default) = no PrivateLink registration. Passing these does NOT create a dependency cycle — the endpoints depend on this Component's VPC, and mws_networks depends on the endpoints (verified acyclic)."
+  type = object({
+    rest_api_id = optional(string)
+    relay_id    = optional(string)
+  })
+  default = null
+}

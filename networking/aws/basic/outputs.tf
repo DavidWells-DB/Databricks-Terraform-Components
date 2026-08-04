@@ -13,6 +13,11 @@ output "private_subnet_ids" {
   value       = module.vpc.private_subnet_ids
 }
 
+output "privatelink_subnet_ids" {
+  description = "Map of dedicated PrivateLink subnet IDs (empty when back-end PrivateLink is not used). Pass values(...) to aws-account-network-privatelink-endpoints.privatelink_subnet_ids."
+  value       = module.vpc.privatelink_subnet_ids
+}
+
 output "public_subnet_ids" {
   description = "Map of public subnet IDs"
   value       = module.vpc.public_subnet_ids

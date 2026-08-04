@@ -23,6 +23,10 @@ locals {
 
   private_subnet_cidrs = length(var.private_subnet_cidrs) > 0 ? var.private_subnet_cidrs : [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 4, i)]
   public_subnet_cidrs  = length(var.public_subnet_cidrs) > 0 ? var.public_subnet_cidrs : [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 8, 240 + i)]
+  # PrivateLink subnets are derived only when back-end PrivateLink is in use (vpc_endpoint_ids
+  # set) and not supplied explicitly. /24 per AZ placed high (250+i) to avoid the public (240+i)
+  # and /20 private blocks.
+  privatelink_subnet_cidrs = length(var.privatelink_subnet_cidrs) > 0 ? var.privatelink_subnet_cidrs : (var.vpc_endpoint_ids != null ? [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 8, 250 + i)] : [])
 }
 
 module "vpc" {
@@ -32,15 +36,17 @@ module "vpc" {
     databricks.account = databricks.account
   }
 
-  databricks_account_id = var.databricks_account_id
-  resource_prefix       = var.resource_prefix
-  network_name          = "${var.resource_prefix}-network"
-  vpc_cidr              = var.vpc_cidr
-  azs                   = local.azs
-  private_subnet_cidrs  = local.private_subnet_cidrs
-  public_subnet_cidrs   = local.public_subnet_cidrs
-  databricks_gov_shard  = var.databricks_gov_shard
-  tags                  = var.tags
+  databricks_account_id    = var.databricks_account_id
+  resource_prefix          = var.resource_prefix
+  network_name             = "${var.resource_prefix}-network"
+  vpc_cidr                 = var.vpc_cidr
+  azs                      = local.azs
+  private_subnet_cidrs     = local.private_subnet_cidrs
+  public_subnet_cidrs      = local.public_subnet_cidrs
+  privatelink_subnet_cidrs = local.privatelink_subnet_cidrs
+  vpc_endpoint_ids         = var.vpc_endpoint_ids
+  databricks_gov_shard     = var.databricks_gov_shard
+  tags                     = var.tags
 }
 
 module "egress_internet" {
