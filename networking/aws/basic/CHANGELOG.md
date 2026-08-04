@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-08-03
+
+### Fixed
+- **In-place back-end PrivateLink adoption on a LIVE workspace now works.** Two parts: (1) repin to `aws-account-network-vpc` **v0.2.0**, which adds `create_before_destroy` on `databricks_mws_networks` (the `vpc_endpoints` block is ForceNew, so adopting PrivateLink replaces the *registration*; delete-then-create fails with `Network is being used by active workspace`). (2) `network_name` now varies with PrivateLink (`<prefix>-network` → `<prefix>-network-privatelink`) so the create-before-destroy replacement doesn't collide with the existing registration. **The VPC is unchanged** — PrivateLink adds interface endpoints to the existing VPC; only the metadata-only Databricks registration is re-created. Both patterns come from the prior-art stack and were missing here; found by a live evolution-journey apply.
+
 ## [0.3.1] - 2026-08-03
 
 ### Fixed

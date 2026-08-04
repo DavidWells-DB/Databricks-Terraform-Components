@@ -31,15 +31,20 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.2.0"
 
   providers = {
     databricks.account = databricks.account
   }
 
-  databricks_account_id    = var.databricks_account_id
-  resource_prefix          = var.resource_prefix
-  network_name             = "${var.resource_prefix}-network"
+  databricks_account_id = var.databricks_account_id
+  resource_prefix       = var.resource_prefix
+  # Name varies with PrivateLink so the create_before_destroy replacement of the
+  # (metadata-only) network registration doesn't collide with the existing one when
+  # back-end PrivateLink is adopted on a LIVE workspace. Same VPC either way — only the
+  # Databricks-side registration is re-created to carry the vpc_endpoints. (Pattern from
+  # the prior-art stack; without it the CBD create fails on a duplicate network name.)
+  network_name             = var.vpc_endpoint_ids != null ? "${var.resource_prefix}-network-privatelink" : "${var.resource_prefix}-network"
   vpc_cidr                 = var.vpc_cidr
   azs                      = local.azs
   private_subnet_cidrs     = local.private_subnet_cidrs
