@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-04
+
+### Fixed
+- **Removed a spurious `databricks` provider requirement.** The component declared `configuration_aliases = [databricks.account]` but uses **zero** databricks resources or data sources — it is pure Azure networking (VNet, subnets, NSG, associations). That forced every caller to pass a `databricks.account` provider for nothing, and a caller that didn't failed `terraform init` with "Missing required provider configuration", making the component uninstantiable in a networking-only root. Found while building the Azure classic workspace config.
+
+### Changed
+- **BREAKING (caller-side simplification):** callers must **stop** passing `providers = { databricks.account = ... }` to this component. Only `azurerm` is required now.
+
 ## [0.2.0] - 2026-08-04
 
 ### Added
