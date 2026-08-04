@@ -23,10 +23,11 @@ locals {
 
   private_subnet_cidrs = length(var.private_subnet_cidrs) > 0 ? var.private_subnet_cidrs : [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 4, i)]
   public_subnet_cidrs  = length(var.public_subnet_cidrs) > 0 ? var.public_subnet_cidrs : [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 8, 240 + i)]
-  # PrivateLink subnets are derived only when back-end PrivateLink is in use (vpc_endpoint_ids
-  # set) and not supplied explicitly. /24 per AZ placed high (250+i) to avoid the public (240+i)
-  # and /20 private blocks.
-  privatelink_subnet_cidrs = length(var.privatelink_subnet_cidrs) > 0 ? var.privatelink_subnet_cidrs : (var.vpc_endpoint_ids != null ? [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 8, 250 + i)] : [])
+  # PrivateLink subnets are derived from the plan-time boolean `enable_privatelink_subnets`
+  # (NOT from vpc_endpoint_ids — those come from endpoints placed IN these subnets, which
+  # would create a cycle). /24 per AZ placed high (250+i) to avoid the public (240+i) and
+  # /20 private blocks. Explicit privatelink_subnet_cidrs override the derivation.
+  privatelink_subnet_cidrs = length(var.privatelink_subnet_cidrs) > 0 ? var.privatelink_subnet_cidrs : (var.enable_privatelink_subnets ? [for i in range(local.derived_az_count) : cidrsubnet(var.vpc_cidr, 8, 250 + i)] : [])
 }
 
 module "vpc" {

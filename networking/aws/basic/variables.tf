@@ -59,8 +59,14 @@ variable "tags" {
   default     = {}
 }
 
+variable "enable_privatelink_subnets" {
+  description = "Create dedicated PrivateLink subnets (one per AZ) for back-end PrivateLink VPC endpoints. Set true when composing aws-account-network-privatelink-endpoints against this Component. This is a plan-time boolean and is INDEPENDENT of vpc_endpoint_ids — the endpoints are placed in these subnets, so keying subnet creation off the endpoint IDs would create a dependency cycle."
+  type        = bool
+  default     = false
+}
+
 variable "privatelink_subnet_cidrs" {
-  description = "CIDR blocks for dedicated PrivateLink subnets (one per AZ). Leave empty (default) to derive one /24 per AZ from vpc_cidr when back-end PrivateLink is used; the aws-account-network-privatelink-endpoints module places its VPC endpoints in these subnets. Empty when PrivateLink is not used."
+  description = "Explicit CIDR blocks for the dedicated PrivateLink subnets (one per AZ). Leave empty (default) to derive one /24 per AZ from vpc_cidr when enable_privatelink_subnets = true. Empty when PrivateLink is not used."
   type        = list(string)
   default     = []
 }

@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-08-03
+
+### Fixed
+- **Dependency cycle in back-end PrivateLink wiring.** v0.3.0 derived the PrivateLink subnets from `vpc_endpoint_ids != null`, but the endpoints are placed *in* those subnets — so subnets→endpoints→`vpc_endpoint_ids`→subnets cycled at plan time. Added a plan-time boolean **`enable_privatelink_subnets`** that drives subnet creation independently of the endpoint IDs (which now feed only the `mws_networks` registration). Set `enable_privatelink_subnets = true` alongside `vpc_endpoint_ids` when composing back-end PrivateLink. (The v0.3.0 cycle-freedom test passed only because it hand-fed `privatelink_subnet_cidrs`; the derived path was untested — fixed and now validated in composition.)
+
 ## [0.3.0] - 2026-08-03
 
 ### Added
