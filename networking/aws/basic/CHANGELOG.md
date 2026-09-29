@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-09-29
+
+### Changed
+- **Repin to `aws-account-network-vpc` v0.3.0 (retain-old-config model) and stop varying `network_name`.** The v0.3.0 module keeps the pre-PrivateLink `base` registration and *adds* a `<prefix>-network-privatelink` registration when PrivateLink is enabled (rather than force-replacing the single registration). It derives the `-privatelink` name itself, so this component now passes the static base name `<prefix>-network` and the new plan-time `enable_privatelink` switch (wired from `enable_privatelink_subnets`). This supersedes the v0.3.2 approach (create_before_destroy + name variation), which tried to delete the old registration in the same apply and failed on a running workspace.
+- Adding back-end PrivateLink to a running workspace is now a **single, clean apply**: verified live 2026-09-29 (workspace ID stable, base config retained, no delete-while-attached error). One detached `base` registration lingers after cutover — harmless; see the module's `network_ids` output for optional cleanup.
+
 ## [0.3.2] - 2026-08-03
 
 ### Fixed
