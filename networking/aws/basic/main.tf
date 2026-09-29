@@ -31,7 +31,7 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.2.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.3.0"
 
   providers = {
     databricks.account = databricks.account
@@ -39,20 +39,21 @@ module "vpc" {
 
   databricks_account_id = var.databricks_account_id
   resource_prefix       = var.resource_prefix
-  # Name varies with PrivateLink so the create_before_destroy replacement of the
-  # (metadata-only) network registration doesn't collide with the existing one when
-  # back-end PrivateLink is adopted on a LIVE workspace. Same VPC either way — only the
-  # Databricks-side registration is re-created to carry the vpc_endpoints. (Pattern from
-  # the prior-art stack; without it the CBD create fails on a duplicate network name.)
-  network_name             = var.vpc_endpoint_ids != null ? "${var.resource_prefix}-network-privatelink" : "${var.resource_prefix}-network"
+  # v0.3.0 module owns the PrivateLink naming and RETAINS the base config (it adds a second
+  # "<prefix>-network-privatelink" registration rather than replacing the base one), so the
+  # component passes only the static base name plus the plan-time enable_privatelink switch.
+  network_name             = "${var.resource_prefix}-network"
   vpc_cidr                 = var.vpc_cidr
   azs                      = local.azs
   private_subnet_cidrs     = local.private_subnet_cidrs
   public_subnet_cidrs      = local.public_subnet_cidrs
   privatelink_subnet_cidrs = local.privatelink_subnet_cidrs
-  vpc_endpoint_ids         = var.vpc_endpoint_ids
-  databricks_gov_shard     = var.databricks_gov_shard
-  tags                     = var.tags
+  # Plan-time-known switch for the PrivateLink registration; vpc_endpoint_ids (below) supplies
+  # its values but cannot drive the key set because those IDs are known only after apply.
+  enable_privatelink   = var.enable_privatelink_subnets
+  vpc_endpoint_ids     = var.vpc_endpoint_ids
+  databricks_gov_shard = var.databricks_gov_shard
+  tags                 = var.tags
 }
 
 module "egress_internet" {
