@@ -8,7 +8,7 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=gcp-account-network-vpc/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=gcp-account-network-vpc/v0.1.1"
 
   providers = {
     databricks.account = databricks.account
