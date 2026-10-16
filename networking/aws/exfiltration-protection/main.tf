@@ -148,7 +148,7 @@ module "hub_firewall" {
 ###############################################################################
 
 module "spoke_vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.3.0"
 
   providers = {
     databricks.account = databricks.account
@@ -162,6 +162,7 @@ module "spoke_vpc" {
   private_subnet_cidrs   = var.spoke_private_subnet_cidrs
   privatelink_subnet_cidrs = var.spoke_privatelink_subnet_cidrs
   databricks_gov_shard   = var.databricks_gov_shard
+  enable_privatelink     = var.enable_privatelink
   vpc_endpoint_ids       = var.enable_privatelink ? {
     rest_api_id = module.spoke_privatelink[0].workspace_vpc_endpoint_id
     relay_id    = module.spoke_privatelink[0].relay_vpc_endpoint_id
