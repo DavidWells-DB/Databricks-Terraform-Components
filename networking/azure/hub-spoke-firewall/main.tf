@@ -35,7 +35,7 @@ resource "azurerm_subnet" "hub_gateway" {
 ###############################################################################
 
 module "spoke_vnet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=azure-account-network-vnet/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=azure-account-network-vnet/v0.2.0"
 
   resource_group_name   = var.resource_group_name
   location              = var.location

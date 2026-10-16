@@ -30,7 +30,7 @@ module "ncc" {
 
 module "vnet" {
   count  = var.enable_vnet ? 1 : 0
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=azure-account-network-vnet/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-vnet?ref=azure-account-network-vnet/v0.2.0"
 
   resource_group_name   = var.resource_group_name
   location              = var.location
