@@ -19,9 +19,33 @@ variable "catalog_comment" {
 }
 
 variable "catalog_storage_root" {
-  description = "Optional managed storage root (s3://...) for the catalog. If empty, uses metastore default. Setting this requires the storage-credential inputs below."
+  description = "ADOPT an existing managed storage root (s3://bucket/path) for the catalog. When set, no bucket is created and the storage-credential inputs must point at that bucket. Empty = create_catalog_storage decides."
   type        = string
   default     = ""
+}
+
+variable "create_catalog_storage" {
+  description = "CREATE a dedicated S3 bucket for the catalog's managed storage — the default (best practice: catalog data on its own bucket, not the workspace root the platform's workspace catalog shares). Ignored when catalog_storage_root is set (adopt); set false to use metastore-default managed storage."
+  type        = bool
+  default     = true
+}
+
+variable "catalog_storage_path" {
+  description = "Optional path suffix under the CREATED bucket (e.g. \"data\"). Default: bucket root."
+  type        = string
+  default     = null
+}
+
+variable "bucket_kms_key_arn" {
+  description = "Optional KMS key ARN for the created bucket. Null = SSE-S3 (AES256)."
+  type        = string
+  default     = null
+}
+
+variable "storage_tags" {
+  description = "Tags applied to the created bucket."
+  type        = map(string)
+  default     = {}
 }
 
 variable "catalog_isolation_mode" {
@@ -88,19 +112,19 @@ variable "external_locations" {
 # -----------------------------------------------------------------------------
 
 variable "credential_name" {
-  description = "Name for the storage credential. Required only when the catalog uses external storage."
+  description = "Name for the storage credential. Empty = derived (<catalog_name>_uc_cred)."
   type        = string
   default     = ""
 }
 
 variable "role_name" {
-  description = "IAM role name for the storage credential (the module creates this role)."
+  description = "IAM role name for the storage credential (the module creates this role). Empty = derived (<catalog_name>-uc-role)."
   type        = string
   default     = ""
 }
 
 variable "bucket_name" {
-  description = "S3 bucket name for the storage credential."
+  description = "S3 bucket name. When create_catalog_storage is true and this is empty, the dedicated bucket is created as <catalog_name>-uc; when adopting (catalog_storage_root set), this must name the EXISTING bucket the credential targets."
   type        = string
   default     = ""
 }

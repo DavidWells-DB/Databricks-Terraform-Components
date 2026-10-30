@@ -17,3 +17,13 @@ output "iam_role_arn" {
   description = "The IAM role ARN created for the storage credential, or null when no credential was created."
   value       = try(module.storage_credential[0].iam_role_arn, null)
 }
+
+output "catalog_storage_root" {
+  description = "The managed storage root the catalog actually uses: the adopted root, the created bucket (+ path suffix), or empty when the catalog uses metastore-default storage."
+  value       = local.effective_storage_root
+}
+
+output "created_bucket_name" {
+  description = "Name of the dedicated bucket created for the catalog's managed storage, or null when storage was adopted or not used."
+  value       = local.create_storage ? try(module.uc_storage[0].bucket_name, null) : null
+}
