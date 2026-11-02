@@ -57,7 +57,7 @@ module "vpc" {
 }
 
 module "egress_internet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.2.0"
 
   vpc_id                  = module.vpc.vpc_id
   public_subnet_ids       = values(module.vpc.public_subnet_ids)

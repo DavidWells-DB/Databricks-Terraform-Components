@@ -123,7 +123,7 @@ resource "aws_route_table_association" "hub_firewall" {
 # NAT/IGW — routes go to firewall subnets (not hub private)
 # Traffic flow: spoke → TGW → hub private → firewall → NAT → internet
 module "hub_egress_internet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.2.0"
 
   vpc_id                  = aws_vpc.hub.id
   public_subnet_ids       = [for s in aws_subnet.hub_public : s.id]
