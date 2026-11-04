@@ -5,7 +5,7 @@ output "catalog_name" {
 
 output "storage_credential_id" {
   description = "The storage credential ID, or null when the catalog uses metastore-default managed storage."
-  value       = local.storage_credential_id
+  value       = try(module.storage_credential[0].storage_credential_id, null)
 }
 
 output "external_location_ids" {

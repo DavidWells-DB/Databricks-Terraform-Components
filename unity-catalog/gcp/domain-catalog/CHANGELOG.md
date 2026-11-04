@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-04
+
+### Fixed — external review finding (High): credential NAME vs UUID wiring
+- The external locations are now wired with the credential's NAME (the `storage_credential_name` output) instead of its UUID id — `databricks_external_location.credential_name` takes a name, and the previous wiring registered locations against a non-existent credential. Requires `dbx-uc-external-location` v0.2.0 (repinned). The component's `storage_credential_id` output still exposes the credential's UUID id, now sourced directly from the credential module.
+
+
 ## [0.2.0] - 2026-10-30
 
 ### Added — dedicated catalog storage, created by default (best practice)

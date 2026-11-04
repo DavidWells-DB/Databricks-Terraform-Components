@@ -28,16 +28,16 @@ locals {
   role_name   = var.role_name != "" ? var.role_name : "${var.catalog_name}-uc-role"
   cred_name   = var.credential_name != "" ? var.credential_name : "${var.catalog_name}_uc_cred"
 
-  storage_credential_id = local.create_credential ? try(module.storage_credential[0].storage_credential_id, null) : null
+  storage_credential_name = local.create_credential ? try(module.storage_credential[0].storage_credential_name, null) : null
 
   external_locations_with_credential = {
     for name, config in var.external_locations : name => {
-      url                   = config.url
-      storage_credential_id = local.storage_credential_id
-      comment               = config.comment
-      read_only             = config.read_only
-      skip_validation       = config.skip_validation
-      grants                = config.grants
+      url                     = config.url
+      storage_credential_name = local.storage_credential_name
+      comment                 = config.comment
+      read_only               = config.read_only
+      skip_validation         = config.skip_validation
+      grants                  = config.grants
     }
   }
 }
@@ -70,7 +70,7 @@ module "storage_credential" {
 }
 
 module "external_locations" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-external-location?ref=dbx-uc-external-location/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//dbx-uc-external-location?ref=dbx-uc-external-location/v0.2.0"
 
   providers = {
     databricks.workspace = databricks.workspace
