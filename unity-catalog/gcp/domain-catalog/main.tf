@@ -72,6 +72,12 @@ module "external_locations" {
   }
 
   locations = local.external_locations_with_credential
+
+  # External locations validate the credential against the cloud-side trust at
+  # creation - they must wait for the credential module (incl. its IAM propagation
+  # sleep on AWS; a no-op when no credential is created). Without this the ELs race
+  # IAM propagation (review Med).
+  depends_on = [module.storage_credential]
 }
 
 module "catalog" {
