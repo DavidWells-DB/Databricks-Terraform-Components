@@ -14,14 +14,14 @@ Modules  ──►  Components  ──►  Blueprints
 ```
 
 - **[Modules](https://github.com/DavidWells-DB/Databricks-Terraform-Modules)** — single-purpose building blocks (a VPC, a NAT gateway, a private endpoint set, a metastore).
-- **Components** (this repo) — compose modules into a meaningful, reusable pattern. Each component is a self-contained Terraform root with `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`, and a `README.md`.
+- **Components** (this repo) — compose modules into a meaningful, reusable pattern. Each component is a callable module (no provider blocks — `configuration_aliases` only; the consuming root supplies providers) with `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`, and a `README.md`.
 - **Blueprints** — assemble components into a complete environment for a given workload or customer.
 
 Components source modules directly from the Modules repo via Git, e.g.:
 
 ```hcl
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-vpc?ref=gcp-account-network-vpc/v0.1.1"
   # ...
 }
 ```
@@ -78,7 +78,7 @@ provider "databricks" {
 }
 
 module "isolated" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Components//networking/azure/isolated?ref=main"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Components//networking/azure/isolated?ref=<component-tag>"
 
   providers = {
     databricks.account = databricks.account

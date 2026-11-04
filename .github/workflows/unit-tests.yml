@@ -1,0 +1,66 @@
+name: Unit tests (fmt / validate)
+
+# Credential-free gate for the Components tier (feedback-integration H3 — this repo had
+# only a release-tag check before). Components declare configuration_aliases and carry no
+# provider blocks, so validation goes through a generated synthetic wrapper root
+# (scripts/validate-component.sh — the same mechanism the Blueprints CI uses for
+# module-ized roots). No live cloud or Databricks calls, ever.
+
+on:
+  push:
+    branches: [main, readiness-campaign]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unit-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Discover components
+    runs-on: ubuntu-latest
+    outputs:
+      components: ${{ steps.find.outputs.components }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find component directories
+        id: find
+        run: |
+          components=$(find networking unity-catalog -name main.tf -not -path '*/.terraform/*' \
+            | sed 's|/main.tf$||' | sort \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "components=${components}" >> "$GITHUB_OUTPUT"
+          echo "Discovered components:"
+          echo "${components}" | jq -r '.[]'
+
+  fmt:
+    name: fmt -check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.15.8"
+          terraform_wrapper: false
+      - run: terraform fmt -check -recursive
+
+  validate:
+    name: ${{ matrix.component }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        component: ${{ fromJson(needs.discover.outputs.components) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.15.8"
+          terraform_wrapper: false
+      - name: validate via synthetic wrapper
+        run: scripts/validate-component.sh "${{ matrix.component }}"

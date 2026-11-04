@@ -154,16 +154,16 @@ module "spoke_vpc" {
     databricks.account = databricks.account
   }
 
-  databricks_account_id  = var.databricks_account_id
-  resource_prefix        = "${var.resource_prefix}-spoke"
-  network_name           = "${var.resource_prefix}-network"
-  vpc_cidr               = var.spoke_vpc_cidr
-  azs                    = var.spoke_availability_zones
-  private_subnet_cidrs   = var.spoke_private_subnet_cidrs
+  databricks_account_id    = var.databricks_account_id
+  resource_prefix          = "${var.resource_prefix}-spoke"
+  network_name             = "${var.resource_prefix}-network"
+  vpc_cidr                 = var.spoke_vpc_cidr
+  azs                      = var.spoke_availability_zones
+  private_subnet_cidrs     = var.spoke_private_subnet_cidrs
   privatelink_subnet_cidrs = var.spoke_privatelink_subnet_cidrs
-  databricks_gov_shard   = var.databricks_gov_shard
-  enable_privatelink     = var.enable_privatelink
-  vpc_endpoint_ids       = var.enable_privatelink ? {
+  databricks_gov_shard     = var.databricks_gov_shard
+  enable_privatelink       = var.enable_privatelink
+  vpc_endpoint_ids = var.enable_privatelink ? {
     rest_api_id = module.spoke_privatelink[0].workspace_vpc_endpoint_id
     relay_id    = module.spoke_privatelink[0].relay_vpc_endpoint_id
   } : null

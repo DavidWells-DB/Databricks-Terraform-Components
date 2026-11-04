@@ -27,9 +27,9 @@ module "vpc" {
 module "cloud_nat" {
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//gcp-account-network-cloud-nat?ref=gcp-account-network-cloud-nat/v0.1.0"
 
-  project_id         = var.project_id
-  region             = var.region
-  network_self_link  = module.vpc.network_self_link
+  project_id           = var.project_id
+  region               = var.region
+  network_self_link    = module.vpc.network_self_link
   subnetwork_self_link = module.vpc.subnetwork_self_link
-  resource_prefix    = var.resource_prefix
+  resource_prefix      = var.resource_prefix
 }

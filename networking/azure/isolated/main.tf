@@ -81,14 +81,14 @@ module "vnet_peering" {
 module "firewall" {
   source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//azure-account-network-firewall?ref=azure-account-network-firewall/v0.1.0"
 
-  resource_group_name     = var.resource_group_name
-  location                = var.location
-  firewall_name           = var.firewall_name
-  firewall_subnet_id      = azurerm_subnet.hub_firewall.id
-  spoke_subnet_ids        = [module.spoke_vnet.host_subnet_id, module.spoke_vnet.container_subnet_id]
+  resource_group_name       = var.resource_group_name
+  location                  = var.location
+  firewall_name             = var.firewall_name
+  firewall_subnet_id        = azurerm_subnet.hub_firewall.id
+  spoke_subnet_ids          = [module.spoke_vnet.host_subnet_id, module.spoke_vnet.container_subnet_id]
   allowed_spoke_cidr_ranges = [var.spoke_host_subnet_cidr, var.spoke_container_subnet_cidr]
-  service_tag_rules       = var.service_tag_rules
-  tags                    = var.tags
+  service_tag_rules         = var.service_tag_rules
+  tags                      = var.tags
 }
 
 ###############################################################################
