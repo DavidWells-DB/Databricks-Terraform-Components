@@ -42,3 +42,8 @@ output "container_subnet_nsg_association_id" {
   description = "NSG association ID for the container (private) subnet. Pass to azure-account-workspace as private_subnet_network_security_group_association_id — required for VNet injection."
   value       = module.vnet.container_subnet_nsg_association_id
 }
+
+output "pe_subnet_id" {
+  description = "Resource ID of the optional private-endpoint subnet. Null when pe_subnet_name is not set — feed to azure-account-network-private-endpoints' pe_subnet_id."
+  value       = module.vnet.pe_subnet_id
+}

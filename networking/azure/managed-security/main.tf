@@ -14,6 +14,11 @@ module "vnet" {
   host_subnet_cidr      = var.host_subnet_cidr
   container_subnet_name = var.container_subnet_name
   container_subnet_cidr = var.container_subnet_cidr
-  nsg_name              = var.nsg_name
-  tags                  = var.tags
+
+  # Optional private-endpoint subnet (null = none) — the front-end Private Link path.
+  pe_subnet_name = var.pe_subnet_name
+  pe_subnet_cidr = var.pe_subnet_cidr
+
+  nsg_name = var.nsg_name
+  tags     = var.tags
 }

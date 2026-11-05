@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-05
+
+### Added — N3 safe-path prerequisite (WebUI gap report, 2026-11-04)
+- `pe_subnet_name` / `pe_subnet_cidr` passthrough to the vnet module (the optional PE subnet existed there since v0.2.0 but this component never exposed it) and a `pe_subnet_id` output. Consumers can now wire `azure-account-network-private-endpoints` (front-end Private Link) against this component's VNet without leaving it.
+
+
 ## [0.3.0] - 2026-08-04
 
 ### Fixed
