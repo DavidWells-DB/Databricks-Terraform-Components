@@ -4,6 +4,11 @@ All notable changes to the `networking/aws/basic` component are documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and adheres to [Semantic Versioning](https://semver.org/). See [RELEASING.md](/RELEASING.md).
 
+## [0.4.2] - 2026-11-12
+
+### Changed
+- Pin bump (drop-in): aws-account-network-vpc v0.3.0 -> v0.4.0 — the three-piece split (pure cloud VPC + pure mws-networks registration + this composition). Interface unchanged per its CHANGELOG; moved blocks carry pre-v0.4.0 state with no destroy/create. The live PL regression rerun is owned by the consuming blueprint journey.
+
 ## [Unreleased]
 
 ## [0.4.0] - 2026-09-29
