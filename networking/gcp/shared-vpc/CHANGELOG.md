@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-18
+
+### Changed
+- Pin `gcp-account-network-vpc` v0.1.3 and `gcp-account-network-cloud-nat` v0.1.1 for consistent naming and NAT controls across Components.
+
 ## [0.1.0] - 2026-07-07
 
 ### Added
