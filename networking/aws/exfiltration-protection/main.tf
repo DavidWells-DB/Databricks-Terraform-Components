@@ -148,7 +148,7 @@ module "hub_firewall" {
 ###############################################################################
 
 module "spoke_vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.3.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.4.0"
 
   providers = {
     databricks.account = databricks.account

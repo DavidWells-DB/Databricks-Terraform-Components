@@ -42,7 +42,7 @@ locals {
 resource "aws_security_group" "databricks" {
   count = var.existing_security_group_ids != null ? 0 : 1
 
-  name        = "${var.resource_prefix}-databricks"
+  name        = coalesce(var.security_group_name, "${var.resource_prefix}-databricks")
   description = "Databricks workspace compute security group - allows all internal VPC traffic and all egress."
   vpc_id      = var.existing_vpc_id
 
@@ -50,7 +50,7 @@ resource "aws_security_group" "databricks" {
   ingress {
     description = "Allow all traffic within the Databricks security group (cluster node to node)."
     from_port   = 0
-    to_port    = 0
+    to_port     = 0
     protocol    = "-1"
     self        = true
   }
@@ -59,13 +59,13 @@ resource "aws_security_group" "databricks" {
   egress {
     description = "Allow all egress - Databricks control plane connectivity and package installation."
     from_port   = 0
-    to_port    = 0
+    to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-ec2-no-public-egress-sgr
   }
 
   tags = merge(var.tags, {
-    Name = "${var.resource_prefix}-databricks"
+    Name = coalesce(var.security_group_name, "${var.resource_prefix}-databricks")
   })
 
   #checkov:skip=CKV_AWS_382: Open egress is a Databricks requirement per https://docs.databricks.com/aws/en/security/network/classic/security-group

@@ -31,14 +31,19 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.4.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.4.1"
 
   providers = {
     databricks.account = databricks.account
   }
 
-  databricks_account_id = var.databricks_account_id
-  resource_prefix       = var.resource_prefix
+  databricks_account_id          = var.databricks_account_id
+  resource_prefix                = var.resource_prefix
+  vpc_name                       = var.vpc_name
+  security_group_name            = var.security_group_name
+  private_subnet_name_prefix     = var.private_subnet_name_prefix
+  public_subnet_name_prefix      = var.public_subnet_name_prefix
+  privatelink_subnet_name_prefix = var.privatelink_subnet_name_prefix
   # v0.3.0 module owns the PrivateLink naming and RETAINS the base config (it adds a second
   # "<prefix>-network-privatelink" registration rather than replacing the base one), so the
   # component passes only the static base name plus the plan-time enable_privatelink switch.
@@ -57,12 +62,16 @@ module "vpc" {
 }
 
 module "egress_internet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.2.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.2.1"
 
   vpc_id                  = module.vpc.vpc_id
   public_subnet_ids       = values(module.vpc.public_subnet_ids)
   private_route_table_ids = values(module.vpc.private_route_table_ids)
   tags                    = var.tags
+  internet_gateway_name   = var.internet_gateway_name
+  nat_gateway_name_prefix = var.nat_gateway_name_prefix
+  nat_eip_name_prefix     = var.nat_eip_name_prefix
+  nat_gateway_count       = var.nat_gateway_count
 }
 
 module "vpc_endpoints" {

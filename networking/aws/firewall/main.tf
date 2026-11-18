@@ -16,7 +16,7 @@ locals {
 }
 
 module "vpc" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.3.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-vpc?ref=aws-account-network-vpc/v0.4.0"
 
   providers = {
     databricks.account = databricks.account
@@ -66,7 +66,7 @@ resource "aws_route_table_association" "firewall" {
 # NAT/IGW for internet egress — routes go to firewall subnets (not private)
 # Traffic flow: private → firewall → NAT → internet
 module "egress_internet" {
-  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.1.0"
+  source = "github.com/DavidWells-DB/Databricks-Terraform-Modules//aws-account-network-egress-internet?ref=aws-account-network-egress-internet/v0.2.0"
 
   vpc_id                  = module.vpc.vpc_id
   public_subnet_ids       = values(module.vpc.public_subnet_ids)

@@ -27,3 +27,23 @@ output "cloud_router_id" {
   description = "ID of the Cloud Router"
   value       = module.cloud_nat.router_id
 }
+
+output "network_name" {
+  description = "Name of the VPC network"
+  value       = module.vpc.network_name
+}
+
+output "subnetwork_name" {
+  description = "Name of the workspace subnetwork"
+  value       = module.vpc.subnetwork_name
+}
+
+output "cloud_nat_name" {
+  description = "Name of the Cloud NAT"
+  value       = module.cloud_nat.nat_name
+}
+
+output "cloud_router_name" {
+  description = "Name of the Cloud Router"
+  value       = module.cloud_nat.router_name
+}

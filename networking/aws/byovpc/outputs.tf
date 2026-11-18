@@ -42,3 +42,8 @@ output "security_group_id" {
   description = "The security group for the Databricks registration: your first existing group when bringing your own, else the Databricks-required group this component creates in the BYO VPC."
   value       = var.existing_security_group_ids != null ? var.existing_security_group_ids[0] : aws_security_group.databricks[0].id
 }
+
+output "nat_gateway_ids" {
+  description = "Empty by default; the Blueprint creates or adopts NAT separately for the existing-VPC path."
+  value       = []
+}

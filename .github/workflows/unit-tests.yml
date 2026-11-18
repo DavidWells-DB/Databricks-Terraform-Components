@@ -2,9 +2,9 @@ name: Unit tests (fmt / validate)
 
 # Credential-free gate for the Components tier (feedback-integration H3 — this repo had
 # only a release-tag check before). Components declare configuration_aliases and carry no
-# provider blocks, so validation goes through a generated synthetic wrapper root
-# (scripts/validate-component.sh — the same mechanism the Blueprints CI uses for
-# module-ized roots). No live cloud or Databricks calls, ever.
+# provider blocks, so validation runs in a temporary copy with concrete provider
+# stubs for its declared aliases (scripts/validate-component.sh). No live cloud or
+# Databricks calls, ever.
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
       - name: Find component directories
         id: find
         run: |
-          components=$(find networking unity-catalog -name main.tf -not -path '*/.terraform/*' \
+          components=$(find networking unity-catalog encryption group identity storage -name main.tf -not -path '*/.terraform/*' \
             | sed 's|/main.tf$||' | sort \
             | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "components=${components}" >> "$GITHUB_OUTPUT"
@@ -62,5 +62,5 @@ jobs:
         with:
           terraform_version: "1.15.8"
           terraform_wrapper: false
-      - name: validate via synthetic wrapper
+      - name: validate via isolated root
         run: scripts/validate-component.sh "${{ matrix.component }}"

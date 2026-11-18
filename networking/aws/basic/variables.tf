@@ -13,6 +13,65 @@ variable "resource_prefix" {
   type        = string
 }
 
+variable "vpc_name" {
+  description = "Optional VPC Name tag. Null uses resource_prefix."
+  type        = string
+  default     = null
+}
+
+variable "security_group_name" {
+  description = "Optional Databricks security-group creation name."
+  type        = string
+  default     = null
+}
+
+variable "private_subnet_name_prefix" {
+  description = "Optional private-subnet creation-name prefix."
+  type        = string
+  default     = null
+}
+
+variable "public_subnet_name_prefix" {
+  description = "Optional public-subnet creation-name prefix."
+  type        = string
+  default     = null
+}
+
+variable "privatelink_subnet_name_prefix" {
+  description = "Optional PrivateLink-subnet creation-name prefix."
+  type        = string
+  default     = null
+}
+
+variable "internet_gateway_name" {
+  description = "Optional Internet Gateway Name tag."
+  type        = string
+  default     = "igw"
+}
+
+variable "nat_gateway_name_prefix" {
+  description = "Optional NAT Gateway Name-tag prefix."
+  type        = string
+  default     = "nat"
+}
+
+variable "nat_eip_name_prefix" {
+  description = "Optional NAT Elastic-IP Name-tag prefix."
+  type        = string
+  default     = "nat-eip"
+}
+
+variable "nat_gateway_count" {
+  description = "Number of NAT Gateways to create. Defaults to 1; set to the public-subnet count for AZ-redundant egress."
+  type        = number
+  default     = 1
+
+  validation {
+    condition     = var.nat_gateway_count >= 1
+    error_message = "nat_gateway_count must be at least 1."
+  }
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string

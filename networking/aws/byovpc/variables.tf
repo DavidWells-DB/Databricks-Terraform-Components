@@ -8,6 +8,17 @@ variable "resource_prefix" {
   description = "Prefix for the created security group name and the default network registration name."
 }
 
+variable "security_group_name" {
+  type        = string
+  description = "Optional name for the Databricks security group created in the existing VPC. Null derives '<resource_prefix>-databricks'."
+  default     = null
+
+  validation {
+    condition     = var.existing_security_group_ids == null || var.security_group_name == null
+    error_message = "security_group_name is ignored when existing_security_group_ids are supplied; remove it or let the Component create the security group."
+  }
+}
+
 variable "existing_vpc_id" {
   type        = string
   description = "ID of the EXISTING customer VPC to register (BYO network foundation). This component creates no VPC, subnets, or NAT — bring your own egress."
@@ -73,6 +84,8 @@ variable "vpc_endpoint_ids" {
   default     = null
 }
 
+# Retained for the generated root's provider host selection, not the registration body.
+# tflint-ignore: terraform_unused_declarations
 variable "databricks_gov_shard" {
   type        = string
   description = "Databricks Government shard (null for commercial, 'civilian' or 'dod' for GovCloud)."

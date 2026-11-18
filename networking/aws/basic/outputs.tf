@@ -3,6 +3,26 @@ output "network_id" {
   value       = module.vpc.databricks_network_id
 }
 
+output "internet_gateway_name" {
+  description = "Name tag of the created Internet Gateway."
+  value       = module.egress_internet.internet_gateway_name
+}
+
+output "nat_gateway_names" {
+  description = "Name tags of the created NAT Gateways."
+  value       = module.egress_internet.nat_gateway_names
+}
+
+output "nat_eip_names" {
+  description = "Name tags of the created NAT Elastic IPs."
+  value       = module.egress_internet.nat_eip_names
+}
+
+output "nat_gateway_ids" {
+  description = "IDs of the created NAT Gateways."
+  value       = module.egress_internet.nat_gateway_ids
+}
+
 output "vpc_id" {
   description = "ID of the VPC"
   value       = module.vpc.vpc_id

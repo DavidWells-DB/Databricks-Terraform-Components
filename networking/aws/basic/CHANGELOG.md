@@ -11,6 +11,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-11-18
+
+### Added
+- Exact VPC, subnet-tier, security-group, IGW, NAT, and EIP naming passthroughs with resolved NAT/IGW outputs; pins the corresponding additive module releases.
+
 ## [0.4.0] - 2026-09-29
 
 ### Changed
