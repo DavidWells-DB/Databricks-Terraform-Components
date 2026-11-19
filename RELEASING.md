@@ -56,7 +56,7 @@ terraform fmt -check -recursive "$COMPONENT"
 
 ## Tag immutability
 
-Published tags are never force-moved. If a tag was wrong, cut a new version. The `release-check` workflow (and, ideally, a repo rule blocking force-pushes to `refs/tags/**`) enforce this.
+Published tags are never force-moved. If a tag was wrong, cut a new version. An active GitHub tag ruleset must restrict updates and deletions for all tags; this is the preventive control. The `release-check` workflow also rejects non-create push events as a secondary audit, but a post-push workflow cannot prevent a ref from moving.
 
 ## Registry note
 

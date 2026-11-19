@@ -1,4 +1,4 @@
-name: Unit tests (fmt / validate)
+name: Unit tests (fmt / validate / plan-test)
 
 # Credential-free gate for the Components tier (feedback-integration H3 — this repo had
 # only a release-tag check before). Components declare configuration_aliases and carry no
@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: unit-tests-${{ github.ref }}
+  group: components-unit-tests-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -30,8 +30,11 @@ jobs:
       - name: Find component directories
         id: find
         run: |
-          components=$(find networking unity-catalog encryption group identity storage -name main.tf -not -path '*/.terraform/*' \
-            | sed 's|/main.tf$||' | sort \
+          components=$(find networking unity-catalog encryption group identity storage -name versions.tf \
+              -not -path '*/.terraform/*' \
+              -not -path '*/examples/*' \
+              -not -path '*/tests/*' \
+            | sed 's|/versions.tf$||' | sort \
             | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "components=${components}" >> "$GITHUB_OUTPUT"
           echo "Discovered components:"
@@ -64,3 +67,16 @@ jobs:
           terraform_wrapper: false
       - name: validate via isolated root
         run: scripts/validate-component.sh "${{ matrix.component }}"
+
+      - name: init for plan tests
+        working-directory: ${{ matrix.component }}
+        run: terraform init -backend=false -input=false
+
+      - name: plan-tests
+        working-directory: ${{ matrix.component }}
+        run: |
+          if [ -f tests/plan.tftest.hcl ]; then
+            terraform test -filter=tests/plan.tftest.hcl
+          else
+            echo "No tests/plan.tftest.hcl — skipping."
+          fi

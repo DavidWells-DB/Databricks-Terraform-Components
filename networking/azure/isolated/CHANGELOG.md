@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-19
+
+### Changed
+- Upgrade the spoke VNet Module pin to `azure-account-network-vnet/v0.2.0`.
+- Constrain the AzureRM provider to versions before 5.0 for compatibility with the pinned private-endpoints Module.
+
 ## [0.1.0] - 2026-07-07
 
 ### Added
